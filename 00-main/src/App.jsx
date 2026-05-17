@@ -1,73 +1,35 @@
-// App.jsx
-
-import React from 'react'
-import './App.css'
-import useFetch from './CustomHook'
+import "./App.css";
+import useFetch from "./customHooks";
 
 function App() {
-
-  const { data: users = [], loading } = useFetch();
+  const { data: users = [], loading } = useFetch('https://randomuser.me/api/?results=5');
 
   return (
-
-    <div className='app'>
-
-      <h1 className='title'>Users Data</h1>
-
-      {
-        loading ? (
-          <div className='loading'>Loading...</div>
-        ) : (
-          <div className='users-container'>
-
-            {
-              users.map(user => (
-                <div className='user-card' key={user.login.uuid}>
-
-                  <img
-                    className='user-image'
-                    src={user.picture.large}
-                    alt={`${user.name.first} ${user.name.last}`}
-                  />
-
-                  <h2 className='user-name'>
-                    {user.name.first} {user.name.last}
-                  </h2>
-
-                  <p>
-                    <strong>Email:</strong> {user.email}
-                  </p>
-
-                  <p>
-                    <strong>Phone:</strong> {user.phone}
-                  </p>
-
-                  <p>
-                    <strong>Gender:</strong> {user.gender}
-                  </p>
-
-                  <p>
-                    <strong>Age:</strong> {user.dob.age}
-                  </p>
-
-                  <p>
-                    <strong>Country:</strong> {user.location.country}
-                  </p>
-
-                  <p>
-                    <strong>City:</strong> {user.location.city}
-                  </p>
-
-                </div>
-              ))
-            }
-
+    <div className="App">
+      <h1>User Profiles</h1>
+      
+      {loading ? (
+        <div>Loading users...</div>
+      ) : (
+        users.map((user) => (
+          <div key={user.login.uuid} className="user-card">
+            <div className="left-side">
+              <img 
+                src={user.picture.large} 
+                alt={`${user.name.first} ${user.name.last}`} 
+              />
+            </div>
+            <div className="right-side">
+              <p><b>Name:</b> {user.name.first} {user.name.last}</p>
+              <p><b>Phone:</b> {user.cell}</p>
+              <p><b>Email:</b> {user.email}</p>
+              <p><b>Location:</b> {user.location.city}, {user.location.country}</p>
+            </div>
           </div>
-        )
-      }
-
+        ))
+      )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
