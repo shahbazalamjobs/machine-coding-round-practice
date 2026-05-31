@@ -89,7 +89,7 @@ function Autocomplete() {
                 type="text"
                 value={input}
                 onChange={handleChange}
-                placeholder="Search recipes..."
+                placeholder="Search Recipes..."
             />
 
             <div className="suggestion">
@@ -110,11 +110,11 @@ function Autocomplete() {
                 )}
 
                 {!loading &&
-                    !isSelected &&
-                    input.trim() &&
-                    suggestion.length === 0 && (
-                        <div>No results found</div>
-                    )}
+                !isSelected &&
+                input.trim() &&
+                suggestion.length === 0 && (
+                    <div>No results found</div>
+                )}
             </div>
         </div>
     );
