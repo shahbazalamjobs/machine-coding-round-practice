@@ -1,10 +1,10 @@
 import React from 'react'
-import Autocomplete from './Autocomplete'
+import Carousel from './Carousel'
 import './App.css'
 
 function App() {
   return (
-    <Autocomplete />
+    <Carousel />
   )
 }
 
