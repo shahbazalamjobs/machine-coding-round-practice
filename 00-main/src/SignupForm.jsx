@@ -1,134 +1,107 @@
-
-import { useState } from 'react'
+import { useForm, useWatch } from "react-hook-form";
 
 function SignupForm() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors }
+  } = useForm();
 
-  const [ formData, setFormData ] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+  const name = useWatch({
+    control,
+    name: "name"
   });
 
-  const [ errors, setErrors ] = useState({});
+  const email = useWatch({
+    control,
+    name: "email"
+  });
 
-  const validate = () => {
-    let newErrors = {};
+  const password = useWatch({
+    control,
+    name: "password"
+  });
 
-    if(formData.name.trim() === '') {
-      newErrors.name = 'Name is required'
-    }
-
-    if(formData.email.trim() === '') {
-      newErrors.email = 'Email is required'
-    } else if(!(/^[A-Z0-9._+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i).test(formData.email)) {
-      newErrors.email = 'Valid email is required'
-    }
-
-    if(formData.password.trim() === '') {
-      newErrors.password = 'Password is required'
-    } else if(formData.password.length < 6) {
-      newErrors.password = 'Minimm 6 characters are required'
-    }
-
-    if(formData.confirmPassword.trim() === '') {
-      newErrors.confirmPassword = 'Confrim password is required'
-    } else if(formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Confirm password is not matching password'
-    }
-
-    return newErrors;
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const validateErrors = validate();
-
-    setErrors(validateErrors);
-
-    if(Object.keys(validateErrors).length === 0) {
-      console.log('Form Submitted', formData);
-
-      alert("Form submitted successfully");
-
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      })
-
-      setErrors({});
-    }
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    
-    setFormData(prev => (
-      {...prev, [name]: value}
-    ));
-  }
+  const onSubmit = (data) => {
+    console.log(data);
+    alert("Form Submitted Successfully!");
+    reset();
+  };
 
   return (
-    <div className='container'>
-      <h1>Sign Up Form</h1>
+    <div className="container">
+      <div className="form-wrapper">
+        <h2 className="form-title">React Hook Form</h2>
 
-      <form className='form' onSubmit={handleSubmit}>
-        
-        <div className="form-group">
-          <input 
-            type="text" 
-            name='name'
-            placeholder='Enter Name...'
-            value={formData.name}
-            onChange={handleChange}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input
+            type="text"
+            placeholder="Enter your name"
+            {...register("name", {
+              required: "Name is required"
+            })}
           />
+          {errors.name && (
+            <p className="error">{errors.name.message}</p>
+          )}
 
-          {errors.name && <span className='error'>{errors.name}</span> }
-        </div>
-        
-        <div className="form-group">
-          <input 
-            type="email" 
-            name='email'
-            placeholder='Enter Email...'
-            value={formData.email}
-            onChange={handleChange}
+          <input
+            type="email"
+            placeholder="Enter your email"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^\S+@\S+\.\S+$/,
+                message: "Invalid email address"
+              }
+            })}
           />
+          {errors.email && (
+            <p className="error">{errors.email.message}</p>
+          )}
 
-          {errors.email && <span className='error'>{errors.email}</span> }
-        </div>
-        
-        <div className="form-group">
-          <input 
-            type="password" 
-            name='password'
-            placeholder='Enter Password...'
-            value={formData.password}
-            onChange={handleChange}
+          <input
+            type="password"
+            placeholder="Enter your password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Minimum 6 characters required"
+              }
+            })}
           />
+          {errors.password && (
+            <p className="error">{errors.password.message}</p>
+          )}
 
-          {errors.password && <span className='error'>{errors.password}</span> }
+          <button type="submit">
+            Create Account
+          </button>
+        </form>
+
+        <hr />
+
+        <div className="preview">
+          <h3>Live Preview</h3>
+
+          <p>
+            <strong>Name:</strong> {name || "-"}
+          </p>
+
+          <p>
+            <strong>Email:</strong> {email || "-"}
+          </p>
+
+          <p>
+            <strong>Password:</strong> {password || "-"}
+          </p>
         </div>
-        
-        <div className="form-group">
-          <input 
-            type="password" 
-            name='confirmPassword'
-            placeholder='Enter Confirm Password...'
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
-
-          {errors.confirmPassword && <span className='error'>{errors.confirmPassword}</span> }
-        </div>
-
-        <button type='submit'> Sign Up </button>
-      </form>
+      </div>
     </div>
-  )
+  );
 }
 
 export default SignupForm;
